@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "533646060943",
+    "project_id": "kongsi-kerta",
+    "storage_bucket": "kongsi-kerta.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533646060943:android:cda048c46c2c4504e9effa",
+        "android_client_info": {
+          "package_name": "mobile.wsmb2024.T09"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBu9Vujm02hPV2TTKDdBavToDpVthrRC64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533646060943:android:8c99e44e376cb5a2e9effa",
+        "android_client_info": {
+          "package_name": "mobile.wsmb2024.W09"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBu9Vujm02hPV2TTKDdBavToDpVthrRC64"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
