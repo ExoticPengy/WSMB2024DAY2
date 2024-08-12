@@ -30,7 +30,6 @@ class AuthViewModel: ViewModel() {
     var userId by mutableStateOf("")
     var userPassword by mutableStateOf("")
 
-    val db = Firebase
     val auth = Firebase.auth
 
     init {
