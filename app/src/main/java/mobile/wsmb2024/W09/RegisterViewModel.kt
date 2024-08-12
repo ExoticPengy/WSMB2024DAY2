@@ -46,8 +46,7 @@ class RegisterViewModel: ViewModel() {
 
     var step by mutableIntStateOf(1)
     var loading by mutableStateOf(false)
-    var doneSaving by mutableStateOf(false)
-    var icHasErrors by mutableStateOf(false)
+    var isBack by mutableStateOf(false)
     var notSaved by mutableStateOf(true)
     var selectedImageUri by mutableStateOf<Uri?>(null)
 
@@ -96,15 +95,46 @@ class RegisterViewModel: ViewModel() {
             )
 
             driversRef.add(newUserDetails)
-                .addOnSuccessListener {
-                    doneSaving = true
-                }
         }
     }
+
+    var icHasErrors by mutableStateOf(false)
 
     fun validateIc() {
         if (ic.length == 12 || ic.length == 0) {
             icHasErrors = false
         } else icHasErrors = true
+    }
+
+    var passwordHasErrors by mutableStateOf(false)
+
+    fun validatePassword() {
+        if (password.length >= 6 || password.length == 0) {
+            passwordHasErrors = false
+        } else passwordHasErrors = true
+    }
+
+    var emailHasErrors by mutableStateOf(false)
+
+    fun validateEmail() {
+        if (email.isEmpty() || android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            emailHasErrors = false
+        } else emailHasErrors = true
+    }
+
+    var genderHasErrors by mutableStateOf(false)
+
+    fun validateGender() {
+        if (gender == "" || gender == "Male" || gender == "Female") {
+            genderHasErrors = false
+        } else genderHasErrors = true
+    }
+
+    var phoneHasErrors by mutableStateOf(false)
+
+    fun validatePhone() {
+        if (phone.length == 11 || phone.length == 12 || phone.length == 0) {
+            phoneHasErrors = false
+        } else phoneHasErrors = true
     }
 }

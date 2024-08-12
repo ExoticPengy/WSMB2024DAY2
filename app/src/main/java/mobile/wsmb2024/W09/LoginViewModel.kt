@@ -27,6 +27,13 @@ class LoginViewModel: ViewModel() {
                     rider = doc.toObject()
                 }
                 authViewModel.signIn(rider.email, password)
+                reset()
             }
+    }
+
+    private fun reset() {
+        password = ""
+        ic = ""
+        rider = RegisterViewModel.UserDetails()
     }
 }

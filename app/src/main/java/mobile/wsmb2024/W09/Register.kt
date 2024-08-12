@@ -5,6 +5,16 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideIn
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +38,7 @@ import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.ElevatedCard
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -43,6 +54,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
@@ -80,37 +92,72 @@ fun Register(
             horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center,
             modifier = Modifier
         ) {
+            val progress by animateFloatAsState(
+                targetValue = (registerViewModel.step - 1) / 2.toFloat(),
+                animationSpec = spring(stiffness =  Spring.StiffnessLow)
+            )
+
             if  (registerViewModel.loading) {
                 LoadingDialog()
             }
+            Text("Register as Rider")
+            Spacer(Modifier.height(40.dp))
             if (registerViewModel.step < 4) {
                 Text("Step ${registerViewModel.step} of 3")
             }
+            LinearProgressIndicator(
+                progress = progress,
+                color = toColor("#52aef1"),
+                modifier = Modifier
+                    .width(200.dp)
+                    .padding(top = 20.dp)
+            )
             Spacer(Modifier.height(40.dp))
-            Driver(registerViewModel, authViewModel, navBack = {navBack()})
+            Rider(registerViewModel, authViewModel, navBack = {navBack()})
         }
     }
 }
 
 @Composable
-fun Driver(
+fun Rider(
     registerViewModel: RegisterViewModel,
     authViewModel: AuthViewModel,
     navBack: () -> Unit
 ) {
 
     AnimatedContent(
-        targetState = registerViewModel.step
+        targetState = registerViewModel.step,
+        transitionSpec = {
+            if (registerViewModel.isBack) {
+                slideIn(
+                    tween(500)
+                ) { fullSize ->
+                    IntOffset(-fullSize.width * 2, 0)
+                } togetherWith
+                        slideOut(
+                            tween(500)
+                        ) { fullSize ->
+                            IntOffset(fullSize.width * 2, 0)
+                        }
+            }
+            else {
+                slideIn(
+                    tween(500)
+                ) { fullSize ->
+                    IntOffset(fullSize.width * 2, 0)
+                } togetherWith
+                        slideOut(
+                            tween(500)
+                        ) { fullSize ->
+                            IntOffset(-fullSize.width * 2, 0)
+                        }
+            }
+        }
     ) {
         when (it) {
             1 -> Step1(registerViewModel)
             2 -> Step2(registerViewModel)
-        }
-    }
-
-    AnimatedContent(targetState = registerViewModel.step) {
-        if (it == 3) {
-            Confirm(registerViewModel = registerViewModel)
+            3 -> Confirm(registerViewModel = registerViewModel)
         }
     }
 
@@ -124,6 +171,7 @@ fun Driver(
             registerViewModel = registerViewModel,
             buttonText = "Back",
             onClick = {
+                registerViewModel.isBack = true
                 when (registerViewModel.step) {
                     1 -> {
                         navBack()
@@ -139,10 +187,13 @@ fun Driver(
             color = toColor("#52aef1")
         )
 
+        Spacer(Modifier.height(20.dp))
+
         StepButton(
             registerViewModel = registerViewModel,
             buttonText = if (registerViewModel.step == 3) "Done" else "Next",
             onClick = {
+                registerViewModel.isBack = false
                 when (registerViewModel.step) {
                     1 -> {
                         registerViewModel.step = 2
@@ -189,6 +240,7 @@ fun Step1(
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier
+                .padding(bottom = 20.dp)
                 .size(150.dp)
                 .border(1.dp, Color.Black, RoundedCornerShape(50))
         ) {
@@ -224,31 +276,36 @@ fun Step1(
             placeholder = "111111223333",
             validation = registerViewModel.icHasErrors,
             keyboardType = KeyboardType.NumberPassword,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
+            support = "Must be 12 digits!"
         )
 
         UserField(
             value = registerViewModel.password,
             onChange = {
                 registerViewModel.password = it
+                registerViewModel.validatePassword()
             },
             label = "Password",
             placeholder = "",
-            validation = false,
+            validation = registerViewModel.passwordHasErrors,
             keyboardType = KeyboardType.Password,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
+            support = "At least 6 characters!"
         )
 
         UserField(
             value = registerViewModel.email,
             onChange = {
                 registerViewModel.email = it
+                registerViewModel.validateEmail()
             },
             label = "Email",
             placeholder = "example@email.com",
-            validation = false,
+            validation = registerViewModel.emailHasErrors,
             keyboardType = KeyboardType.Email,
-            imeAction = ImeAction.Done
+            imeAction = ImeAction.Done,
+            support = "Incorrect email format!"
         )
     }
 }
@@ -278,24 +335,28 @@ fun Step2(
             value = registerViewModel.gender,
             onChange = {
                 registerViewModel.gender = it
+                registerViewModel.validateGender()
             },
             label = "Gender",
             placeholder = "Male or Female",
-            validation = false,
+            validation = registerViewModel.genderHasErrors,
             keyboardType = KeyboardType.Text,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
+            support = "Male or Female only!"
         )
 
         UserField(
             value = registerViewModel.phone,
             onChange = {
                 registerViewModel.phone = it
+                registerViewModel.validatePhone()
             },
             label = "Phone No.",
             placeholder = "60123456789",
-            validation = false,
+            validation = registerViewModel.phoneHasErrors,
             keyboardType = KeyboardType.Phone,
-            imeAction = ImeAction.Next
+            imeAction = ImeAction.Next,
+            support = "11 - 12 digits only!"
         )
 
         UserField(
@@ -320,7 +381,7 @@ fun Confirm(
     val userDetails = registerUiState.userDetails
 
     ElevatedCard(
-        modifier = Modifier
+        modifier = Modifier.padding(bottom = 20.dp)
     ) {
         Column(
             horizontalAlignment = Alignment.Start,
@@ -338,6 +399,7 @@ fun Confirm(
                 contentDescription = "Profile Picture",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
+                    .padding(top = 10.dp, bottom = 10.dp)
                     .size(100.dp)
                     .clip(RoundedCornerShape(50))
                     .border(1.dp, Color.Black, RoundedCornerShape(50))
@@ -346,7 +408,7 @@ fun Confirm(
             Text("IC No: ${userDetails.ic}")
             Text("Email: ${userDetails.email}")
 
-            Divider(thickness = 1.dp, color =  Color.Black)
+            Divider(thickness = 1.dp, color =  Color.Black, modifier = Modifier.padding(top = 10.dp, bottom = 10.dp))
             Text(
                 text = "Personal Details",
                 modifier = Modifier
@@ -368,7 +430,8 @@ fun UserField(
     placeholder: String,
     validation: Boolean,
     keyboardType: KeyboardType,
-    imeAction: ImeAction
+    imeAction: ImeAction,
+    support: String = ""
 ) {
 
     OutlinedTextField(
@@ -376,7 +439,8 @@ fun UserField(
         onValueChange = { onChange(it) },
         label = { Text(label) },
         placeholder = { Text(placeholder) },
-        isError = false,
+        supportingText =  { if (validation) Text(support) } ,
+        isError = validation,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType, imeAction = imeAction),
         singleLine = true,
         modifier = Modifier.width(280.dp)

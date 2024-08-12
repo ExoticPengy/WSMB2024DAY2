@@ -64,6 +64,7 @@ class RiderViewModel: ViewModel() {
     val ridesRef = db.collection("rides")
     val tripsRef = db.collection("trips")
 
+    var search by mutableStateOf("")
     var loading by mutableStateOf(false)
     var showRecords by mutableStateOf(false)
 
@@ -250,18 +251,20 @@ class RiderViewModel: ViewModel() {
     }
 
     fun calculateTotal(trips: List<TripDetails>): Double {
-        var total: Double
+        var total: Double = 0.0
 
         for (trip in trips) {
-            for (ride in _riderUiState.value.rides)
-            if (
-                ride.uid == trip.rideUid &&
-                ride.rideId == trip.rideId
+            for (ride in _riderUiState.value.rides) {
+                if (
+                    ride.uid == trip.rideUid &&
+                    ride.rideId == trip.rideId &&
+                    trip.status != "Cancelled"
                 ) {
-
+                    total += ride.fare
+                }
             }
         }
 
-        return 0.0
+        return total
     }
 }

@@ -38,13 +38,13 @@ class AuthViewModel: ViewModel() {
     }
 
     fun getUid(): String {
-        return auth.currentUser!!.uid
+        return auth.currentUser?.uid?:""
     }
 
     fun signUp(email: String, password: String) {
         updateUiState("Loading")
         if (email.isBlank() || password.isBlank()) {
-            updateUiState("Empty", "Email or Password is Wrong!")
+            updateUiState("Empty", "Email or Password is Empty!")
             return
         }
 
@@ -63,7 +63,7 @@ class AuthViewModel: ViewModel() {
     fun signIn(email: String, password: String) {
         updateUiState("Loading")
         if (email.isBlank() || password.isBlank()) {
-            updateUiState("Empty", "Email or Password is Empty!")
+            updateUiState("Empty", "Email or Password is Wrong!")
             return
         }
 
