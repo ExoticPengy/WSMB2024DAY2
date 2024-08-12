@@ -1,4 +1,4 @@
-package mobile.wsmb2024.w09
+package mobile.wsmb2024.W09
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4

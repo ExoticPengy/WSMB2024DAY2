@@ -1,6 +1,5 @@
-package mobile.wsmb2024.w09
+package mobile.wsmb2024.W09
 
-import android.app.Dialog
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -60,44 +59,45 @@ fun Profile(
             modifier = Modifier
         ) {
 
-
-            ElevatedCard(
-                modifier = Modifier
-            ) {
-                Column(
-                    horizontalAlignment = Alignment.Start,
+            if (!profileViewModel.showDialog) {
+                ElevatedCard(
                     modifier = Modifier
-                        .width(300.dp)
-                        .padding(10.dp)
                 ) {
-                    Text(
-                        text = "Account Details",
+                    Column(
+                        horizontalAlignment = Alignment.Start,
                         modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                    )
-                    AsyncImage(
-                        model = rider.photoUrl,
-                        contentDescription = "Profile Picture",
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .size(100.dp)
-                            .clip(RoundedCornerShape(50))
-                            .border(1.dp, Color.Black, RoundedCornerShape(50))
-                            .align(Alignment.CenterHorizontally)
-                    )
-                    Text("IC No: ${rider.ic}")
-                    Text("Email: ${rider.email}")
+                            .width(300.dp)
+                            .padding(10.dp)
+                    ) {
+                        Text(
+                            text = "Account Details",
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                        )
+                        AsyncImage(
+                            model = rider.photoUrl,
+                            contentDescription = "Profile Picture",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .size(100.dp)
+                                .clip(RoundedCornerShape(50))
+                                .border(1.dp, Color.Black, RoundedCornerShape(50))
+                                .align(Alignment.CenterHorizontally)
+                        )
+                        Text("IC No: ${rider.ic}")
+                        Text("Email: ${rider.email}")
 
-                    Divider(thickness = 1.dp, color =  Color.Black)
-                    Text(
-                        text = "Personal Details",
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                    )
-                    Text("Name: ${rider.name}")
-                    Text("Gender: ${rider.gender}")
-                    Text("Phone: ${rider.phone}")
-                    Text("Address: ${rider.address}")
+                        Divider(thickness = 1.dp, color = Color.Black)
+                        Text(
+                            text = "Personal Details",
+                            modifier = Modifier
+                                .align(Alignment.CenterHorizontally)
+                        )
+                        Text("Name: ${rider.name}")
+                        Text("Gender: ${rider.gender}")
+                        Text("Phone: ${rider.phone}")
+                        Text("Address: ${rider.address}")
+                    }
                 }
             }
 
@@ -109,8 +109,8 @@ fun Profile(
                 Text("Back")
             }
 
-            if (profileViewModel.password != profileViewModel.userPassword) {
-                PasswordDialog(profileViewModel = profileViewModel)
+            if (profileViewModel.showDialog) {
+                PasswordDialog(profileViewModel = profileViewModel, navBack = navBack)
             }
         }
     }
@@ -118,19 +118,28 @@ fun Profile(
 
 @Composable
 fun PasswordDialog(
-    profileViewModel: ProfileViewModel
+    profileViewModel: ProfileViewModel,
+    navBack: () -> Unit
 ) {
     Dialog(onDismissRequest = {  }) {
         Surface(
-            Modifier
-                .height(200.dp)
+            shape = RoundedCornerShape(10),
+            modifier = Modifier
+                .height(150.dp)
                 .width(300.dp)
         ) {
-            Column {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
+                modifier = Modifier.fillMaxSize()
+            ) {
                 Text("Enter your password")
                 OutlinedTextField(
                     value = profileViewModel.password,
-                    onValueChange = { profileViewModel.password = it },
+                    onValueChange = {
+                        profileViewModel.password = it
+                            profileViewModel.checkPassword()
+                                    },
                     label = { Text("Password") },
                     placeholder = { Text("") },
                     isError = false,
@@ -138,6 +147,16 @@ fun PasswordDialog(
                     singleLine = true,
                     modifier = Modifier.width(280.dp)
                 )
+                ElevatedButton(
+                    onClick = {
+                        profileViewModel.showDialog = false
+                        navBack()
+                              },
+                    enabled = true,
+                    colors = ButtonDefaults.buttonColors(containerColor = toColor("#52aef1"))
+                ) {
+                    Text("Back")
+                }
             }
         }
     }

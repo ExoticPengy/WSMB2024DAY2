@@ -1,4 +1,4 @@
-package mobile.wsmb2024.w09
+package mobile.wsmb2024.W09
 
 import org.junit.Test
 

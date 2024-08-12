@@ -1,4 +1,4 @@
-package mobile.wsmb2024.w09.ui.theme
+package mobile.wsmb2024.W09.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle

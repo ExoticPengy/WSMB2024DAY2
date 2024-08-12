@@ -1,4 +1,4 @@
-package mobile.wsmb2024.w09
+package mobile.wsmb2024.W09
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -341,6 +341,8 @@ fun RecordsDialog(
                         }
                     }
                 }
+
+                Text("Total fare: ${toRm(riderViewModel.calculateTotal(trips))}")
             }
         }
     }

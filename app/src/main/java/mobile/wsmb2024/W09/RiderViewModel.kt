@@ -1,4 +1,4 @@
-package mobile.wsmb2024.w09
+package mobile.wsmb2024.W09
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -247,5 +247,21 @@ class RiderViewModel: ViewModel() {
         }
 
         return RideDetails()
+    }
+
+    fun calculateTotal(trips: List<TripDetails>): Double {
+        var total: Double
+
+        for (trip in trips) {
+            for (ride in _riderUiState.value.rides)
+            if (
+                ride.uid == trip.rideUid &&
+                ride.rideId == trip.rideId
+                ) {
+
+            }
+        }
+
+        return 0.0
     }
 }

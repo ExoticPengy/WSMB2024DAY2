@@ -1,4 +1,4 @@
-package mobile.wsmb2024.w09
+package mobile.wsmb2024.W09
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
@@ -42,8 +42,10 @@ fun KongsiKeretaNav(
             )
         }
         composable(route = KongsiKereta.profile.name) {
-
+            Profile(
+                authViewModel = authViewModel,
+                navBack = { navController.popBackStack() },
+            )
         }
-
     }
 }

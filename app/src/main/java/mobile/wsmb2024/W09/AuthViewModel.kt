@@ -1,4 +1,4 @@
-package mobile.wsmb2024.w09
+package mobile.wsmb2024.W09
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,7 +44,7 @@ class AuthViewModel: ViewModel() {
     fun signUp(email: String, password: String) {
         updateUiState("Loading")
         if (email.isBlank() || password.isBlank()) {
-            updateUiState("Empty", "Email or Password is Empty!")
+            updateUiState("Empty", "Email or Password is Wrong!")
             return
         }
 

@@ -1,4 +1,4 @@
-package mobile.wsmb2024.w09
+package mobile.wsmb2024.W09
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -7,7 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.ui.graphics.Color
 import androidx.core.graphics.toColorInt
-import mobile.wsmb2024.w09.ui.theme.W09_ModuleTheme
+import mobile.wsmb2024.W09.ui.theme.W09_ModuleTheme
 import java.text.NumberFormat
 import java.text.SimpleDateFormat
 import java.util.Locale

@@ -1,4 +1,4 @@
-package mobile.wsmb2024.w09
+package mobile.wsmb2024.W09
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -32,6 +32,7 @@ class ProfileViewModel: ViewModel() {
     var profileUiState: StateFlow<ProfileUiState> = _profileUiState.asStateFlow()
 
     var loading by mutableStateOf(false)
+    var showDialog by mutableStateOf(true)
     var password by mutableStateOf("")
     var userPassword by mutableStateOf("")
 
@@ -54,5 +55,10 @@ class ProfileViewModel: ViewModel() {
                 }
                 loading = false
         }
+    }
+
+    fun checkPassword() {
+        if (password == userPassword)
+            showDialog = false
     }
 }

@@ -1,4 +1,4 @@
-package mobile.wsmb2024.w09.ui.theme
+package mobile.wsmb2024.W09.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

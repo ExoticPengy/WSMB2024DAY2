@@ -1,4 +1,4 @@
-package mobile.wsmb2024.w09
+package mobile.wsmb2024.W09
 
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -59,6 +59,10 @@ fun Login(
                 loginViewModel.loading = true
             }
             "Wrong" -> {
+                loginViewModel.loading = false
+                Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            }
+            "Empty" -> {
                 loginViewModel.loading = false
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             }
