@@ -129,7 +129,7 @@ fun Rider(
                 verticalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(500.dp)
+                    .height(450.dp)
             ) {
                 items(rides) { ride ->
                     if (ride.origin.lowercase().contains(riderViewModel.search.lowercase()) ||
@@ -138,7 +138,7 @@ fun Rider(
                         val driver = riderViewModel.getDriver(ride)
                         var showDetails by remember { mutableStateOf(true) }
 
-                        Spacer(Modifier.height(30.dp))
+                        Spacer(Modifier.height(10.dp))
                         Card(
                             modifier = Modifier
                                 .width(300.dp)
@@ -277,13 +277,14 @@ fun Rider(
                             }
                             Spacer(Modifier.height(5.dp))
                         }
+                        Spacer(Modifier.height(20.dp))
                     }
                 }
             }
 
             ExtendedFloatingActionButton(
                 onClick = { riderViewModel.showRecords = true },
-                modifier = Modifier.padding(top = 50.dp, bottom = 50.dp)
+                modifier = Modifier.padding(top = 20.dp, bottom = 50.dp)
             ) {
                 Text("View Ride Records")
                 Spacer(Modifier.width(5.dp))
